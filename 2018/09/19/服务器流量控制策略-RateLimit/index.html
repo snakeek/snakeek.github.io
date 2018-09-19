@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Java," />
 
 
 
@@ -79,13 +79,24 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="小k">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="应用背景由于业务系统的负载能力有限，为了防止预期外的请求对系统造成过大的压力而拖垮系统（即大流量），进行的一种流量控制手段 常见策略常见的服务器流量控制策略有：  分流 待补充  降级 待补充  限流 虽然降低了服务的访问频率和并发量，也因此换来了服务的稳定和高可用性。 常见的限流方式：  Nginx前端限流 按照一定的逻辑如账号，IP，系统调用逻辑等在Nginx层做限流  业务应用系统限流  客">
+<meta name="keywords" content="Java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="服务器流量控制策略-RateLimit">
+<meta property="og:url" content="http://yoursite.com/2018/09/19/服务器流量控制策略-RateLimit/index.html">
 <meta property="og:site_name" content="小k">
+<meta property="og:description" content="应用背景由于业务系统的负载能力有限，为了防止预期外的请求对系统造成过大的压力而拖垮系统（即大流量），进行的一种流量控制手段 常见策略常见的服务器流量控制策略有：  分流 待补充  降级 待补充  限流 虽然降低了服务的访问频率和并发量，也因此换来了服务的稳定和高可用性。 常见的限流方式：  Nginx前端限流 按照一定的逻辑如账号，IP，系统调用逻辑等在Nginx层做限流  业务应用系统限流  客">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://ws2.sinaimg.cn/large/006tNbRwly1fv8sc2rf0nj30cb08b74u.jpg">
+<meta property="og:image" content="https://ws2.sinaimg.cn/large/006tNbRwly1fv8tcggijoj30bp06pwek.jpg">
+<meta property="og:image" content="https://ws2.sinaimg.cn/large/006tNbRwly1fvccde6zp7j30bu08o3ze.jpg">
+<meta property="og:image" content="https://ws3.sinaimg.cn/large/006tNbRwly1fvcchiiy92j306w08qglt.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/006tNbRwly1fvepal1tr6j30i00cowgd.jpg">
+<meta property="og:updated_time" content="2018-09-19T07:59:41.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="小k">
+<meta name="twitter:title" content="服务器流量控制策略-RateLimit">
+<meta name="twitter:description" content="应用背景由于业务系统的负载能力有限，为了防止预期外的请求对系统造成过大的压力而拖垮系统（即大流量），进行的一种流量控制手段 常见策略常见的服务器流量控制策略有：  分流 待补充  降级 待补充  限流 虽然降低了服务的访问频率和并发量，也因此换来了服务的稳定和高可用性。 常见的限流方式：  Nginx前端限流 按照一定的逻辑如账号，IP，系统调用逻辑等在Nginx层做限流  业务应用系统限流  客">
+<meta name="twitter:image" content="https://ws2.sinaimg.cn/large/006tNbRwly1fv8sc2rf0nj30cb08b74u.jpg">
 
 
 
@@ -115,13 +126,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/09/19/服务器流量控制策略-RateLimit/"/>
 
 
 
 
 
-  <title>小k</title>
+  <title>服务器流量控制策略-RateLimit | 小k</title>
   
 
 
@@ -140,8 +151,7 @@
     
   
 
-  <div class="container sidebar-position-right 
-  page-home">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -214,9 +224,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -246,9 +256,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/19/服务器流量控制策略-RateLimit/" itemprop="url">服务器流量控制策略-RateLimit</a></h1>
+          <h1 class="post-title" itemprop="name headline">服务器流量控制策略-RateLimit</h1>
         
 
         <div class="post-meta">
@@ -298,9 +306,7 @@
       
 
       
-        
-          
-            <h3 id="应用背景"><a href="#应用背景" class="headerlink" title="应用背景"></a>应用背景</h3><p>由于业务系统的负载能力有限，为了防止预期外的请求对系统造成过大的压力而拖垮系统（即大流量），进行的一种流量控制手段</p>
+        <h3 id="应用背景"><a href="#应用背景" class="headerlink" title="应用背景"></a>应用背景</h3><p>由于业务系统的负载能力有限，为了防止预期外的请求对系统造成过大的压力而拖垮系统（即大流量），进行的一种流量控制手段</p>
 <h3 id="常见策略"><a href="#常见策略" class="headerlink" title="常见策略"></a>常见策略</h3><p>常见的服务器流量控制策略有：</p>
 <ul>
 <li><p>分流</p>
@@ -451,8 +457,6 @@ width: 70%;
 <p><a href="https://blog.csdn.net/scorpio3k/article/details/53103239" target="_blank" rel="noopener">https://blog.csdn.net/scorpio3k/article/details/53103239</a></p>
 <p><a href="http://ifeve.com/guava-ratelimiter/" target="_blank" rel="noopener">http://ifeve.com/guava-ratelimiter/</a></p>
 
-          
-        
       
     </div>
     
@@ -467,14 +471,20 @@ width: 70%;
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+        </div>
+      
+
+      
+      
+      
 
       
 
       
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -484,10 +494,11 @@ width: 70%;
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -495,6 +506,10 @@ width: 70%;
 
 
           
+
+  
+
+
 
         </div>
         
@@ -515,8 +530,17 @@ width: 70%;
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -567,6 +591,22 @@ width: 70%;
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#应用背景"><span class="nav-number">1.</span> <span class="nav-text">应用背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常见策略"><span class="nav-number">2.</span> <span class="nav-text">常见策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常见的限流算法"><span class="nav-number">3.</span> <span class="nav-text">常见的限流算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Guava的Rate-Limit"><span class="nav-number">4.</span> <span class="nav-text">Guava的Rate Limit</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关于限流的补充"><span class="nav-number">5.</span> <span class="nav-text">关于限流的补充</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -707,6 +747,10 @@ width: 70%;
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
