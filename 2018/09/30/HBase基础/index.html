@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="HBase," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="什么是HBase？  Apache HBase™ is the Hadoop database, a distributed, scalable, big data store.  Apache HBase是基于Hadoop构建的一个分布式的、可伸缩的海量数据存储系统  本文目的记录学习HBase过程，包括部署，常用命令，数据模型  启动HBase依照以下步骤，可以快速的启动本地HBase服务，方">
+<meta name="keywords" content="HBase">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HBase基础">
+<meta property="og:url" content="http://yoursite.com/2018/09/30/HBase基础/index.html">
+<meta property="og:site_name" content="小k">
+<meta property="og:description" content="什么是HBase？  Apache HBase™ is the Hadoop database, a distributed, scalable, big data store.  Apache HBase是基于Hadoop构建的一个分布式的、可伸缩的海量数据存储系统  本文目的记录学习HBase过程，包括部署，常用命令，数据模型  启动HBase依照以下步骤，可以快速的启动本地HBase服务，方">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-09-30T02:47:18.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="HBase基础">
+<meta name="twitter:description" content="什么是HBase？  Apache HBase™ is the Hadoop database, a distributed, scalable, big data store.  Apache HBase是基于Hadoop构建的一个分布式的、可伸缩的海量数据存储系统  本文目的记录学习HBase过程，包括部署，常用命令，数据模型  启动HBase依照以下步骤，可以快速的启动本地HBase服务，方">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/09/30/HBase基础/"/>
+
+
+
+
+
+  <title>HBase基础 | 小k</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小k</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/30/HBase基础/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="snakeek">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小k">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">HBase基础</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-30T10:42:57+08:00">
+                2018-09-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/HBase/" itemprop="url" rel="index">
+                    <span itemprop="name">HBase</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>什么是HBase？</p>
+<blockquote>
+<p>Apache HBase™ is the Hadoop database, a distributed, scalable, big data store.</p>
+</blockquote>
+<p>Apache HBase是基于Hadoop构建的一个分布式的、可伸缩的海量数据存储系统</p>
+<hr>
+<h3 id="本文目的"><a href="#本文目的" class="headerlink" title="本文目的"></a>本文目的</h3><p>记录学习HBase过程，包括部署，常用命令，数据模型</p>
+<hr>
+<h3 id="启动HBase"><a href="#启动HBase" class="headerlink" title="启动HBase"></a>启动HBase</h3><p>依照以下步骤，可以快速的启动本地HBase服务，方便学习，测试</p>
+<ol>
+<li><p>从官网下载<a href="#https://www.apache.org/dyn/closer.lua/hbase/">HBase安装包</a>并解压，比如我是将安装包放到<strong>~/hbase/</strong>目录下并解压</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mv hbase-2.1.0-bin.tar.gz ~/hbase/</span><br><span class="line">tar -zxvf hbase-2.1.0-bin.tar.gz</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>确认本地环境已经配置好了 <strong>JAVA_HOME</strong> 环境变量，可以使用下述命令进行验证</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo $JAVA_HOME</span><br><span class="line">/Library/Java/JavaVirtualMachines/jdk1.8.0_25.jdk/Contents/Home</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>​        如果配置好了 <strong>JAVA_HOME</strong> ，则会输出jdk的路径</p>
+<ol>
+<li><p>修改安装目录下的 <em>conf/hbase-site.xml</em> 文件（file路径可以自由指定），修改起内容为</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version="1.0"?&gt;</span><br><span class="line">&lt;?xml-stylesheet type="text/xsl" href="configuration.xsl"?&gt;</span><br><span class="line">&lt;configuration&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;hbase.rootdir&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;file:/Users/snakeek/hbase/hbase-2.1.0/database&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">&lt;/configuration&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过安装目录下的 <em>bin/start-hbase.sh</em> 脚本，启动HBase服务</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bin/start-hbase.sh</span><br><span class="line">running master, logging to /Users/snakeek/hbase/hbase-2.1.0/bin/../logs/hbase-snakeek-master-snakeekdeMacBook-Pro.local.out</span><br></pre></td></tr></table></figure>
+<p>如上成功后，可以通过后台管理界面查看，浏览器打开 <a href="http://localhost:16010" target="_blank" rel="noopener">http://localhost:16010</a> 即可</p>
+</li>
+</ol>
+<p>至此，已经成功的启动了HBase服务</p>
+<hr>
+<h3 id="使用HBase-Shell"><a href="#使用HBase-Shell" class="headerlink" title="使用HBase Shell"></a>使用HBase Shell</h3><p>在HBase安装目录 <em>/bin</em> 下，使用命令 <strong>hbase shell</strong> 即可访问上一章节中启动的HBase</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span>./bin/hbase shell</span><br><span class="line">2018-09-30 09:32:42,288 WARN  [main] util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable</span><br><span class="line">HBase Shell</span><br><span class="line">Use "help" to get list of supported commands.</span><br><span class="line">Use "exit" to quit this interactive shell.</span><br><span class="line">Version 2.1.0, re1673bb0bbfea21d6e5dba73e013b09b8b49b89b, Tue Jul 10 17:26:48 CST 2018</span><br><span class="line">Took 0.0023 seconds</span><br><span class="line">Ignoring executable-hooks-1.3.2 because its extensions are not built. Try: gem pristine executable-hooks --version 1.3.2</span><br><span class="line">Ignoring gem-wrappers-1.2.7 because its extensions are not built. Try: gem pristine gem-wrappers --version 1.2.7</span><br><span class="line">2.3.0 :001 &gt;</span><br></pre></td></tr></table></figure>
+<p>下面介绍下HBase基本命令，也可以通过输入 <strong>help</strong> 来查看HBase自带的帮助信息</p>
+<p>首先，让我们使用 <em>create</em> 命令来创建一张表，必须要指明表名（table name）和列族名（ColumnFamily）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span>create 'firstTable', 'columnFamily01'</span><br><span class="line">Created table firstTable</span><br><span class="line">Took 0.8026 seconds</span><br><span class="line"> =&gt; Hbase::Table - firstTable</span><br></pre></td></tr></table></figure>
+<p>创建完成后，使用 <em>list</em> 命令查看表是否已经存在HBase中</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span>list</span><br><span class="line">TABLE</span><br><span class="line">firstTable</span><br><span class="line">1 row(s)</span><br><span class="line">Took 0.0103 seconds</span><br><span class="line"> =&gt; ["firstTable"]</span><br></pre></td></tr></table></figure>
+<p>也可以使用 <em>describe</em> 命令查看表的详细信息</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span>desc 'firstTable'</span><br><span class="line">Table firstTable is ENABLED</span><br><span class="line">firstTable</span><br><span class="line">COLUMN FAMILIES DESCRIPTION</span><br><span class="line">&#123;NAME =&gt; 'columnFamily01', VERSIONS =&gt; '1', EVICT_BLOCKS_ON_CLOSE =&gt; 'false', NEW_VERSION_BEHAVIOR =&gt; 'false', KEEP_DELETED_CELLS =&gt; 'FALSE', CACHE_DATA_</span><br><span class="line">ON_WRITE =&gt; 'false', DATA_BLOCK_ENCODING =&gt; 'NONE', TTL =&gt; 'FOREVER', MIN_VERSIONS =&gt; '0', REPLICATION_SCOPE =&gt; '0', BLOOMFILTER =&gt; 'ROW', CACHE_INDEX_ON</span><br><span class="line">_WRITE =&gt; 'false', IN_MEMORY =&gt; 'false', CACHE_BLOOMS_ON_WRITE =&gt; 'false', PREFETCH_BLOCKS_ON_OPEN =&gt; 'false', COMPRESSION =&gt; 'NONE', BLOCKCACHE =&gt; 'true</span><br><span class="line">', BLOCKSIZE =&gt; '65536'&#125;</span><br><span class="line">1 row(s)</span><br><span class="line">Took 0.1149 seconds</span><br></pre></td></tr></table></figure>
+<p>使用 <em>put</em> 命令向表里写入数据</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span> put 'firstTable', 'firstRow', 'columnFamily01:data01', 'value01'</span><br><span class="line">Took 0.0944 seconds</span><br><span class="line"><span class="meta">&gt;</span> put 'firstTable', 'SecondRow', 'columnFamily01:data02', 'value02'</span><br><span class="line">Took 0.0029 seconds</span><br><span class="line"><span class="meta">&gt;</span> put 'firstTable', 'firstRow', 'columnFamily01:data03', 'value03'</span><br><span class="line">Took 0.0047 seconds</span><br></pre></td></tr></table></figure>
+<p>第一条插入的rowkey是 <strong>‘firstRow’’</strong> 列（Column）是 <strong>columnFamily01:data01</strong> 值为 <strong>value01</strong> ，可以注意到，第三条数据的列，其列（Column）为 <strong>columnFamily01:data03</strong> ，<strong>columnFamily</strong> 为其前缀即列族名（ColumnFamily name），HBase中，列（Column）由列族和列限定符组成（由冒号分隔）。</p>
+<p>关于列族部分，可以参见 <a href="#HBase 数据模型">HBase 数据模型</a> 章节</p>
+<p>既然表里有了数据，可以使用 <strong>scan</strong> 命令来扫描整张表的数据</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span>scan 'firstTable'</span><br><span class="line">ROW                                     COLUMN+CELL</span><br><span class="line"> SecondRow                              column=columnFamily01:data02, timestamp=1538273864624, value=value02</span><br><span class="line"> firstRow                               column=columnFamily01:data01, timestamp=1538273850085, value=value01</span><br><span class="line"> firstRow                               column=columnFamily01:data03, timestamp=1538273883122, value=value03</span><br><span class="line">2 row(s)</span><br><span class="line">Took 0.0300 seconds</span><br></pre></td></tr></table></figure>
+<p>也可以使用 <strong>get</strong> 命令获取表中的单行数据</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span>get 'firstTable', 'firstRow'</span><br><span class="line">COLUMN                                  CELL</span><br><span class="line"> columnFamily01:data01                  timestamp=1538273850085, value=value01</span><br><span class="line"> columnFamily01:data03                  timestamp=1538273883122, value=value03</span><br><span class="line">1 row(s)</span><br><span class="line">Took 0.0096 seconds</span><br></pre></td></tr></table></figure>
+<p>如果需要对表结构进行修改或删除表，则需要先使用 <strong>disable</strong> 命令将表设置为不可用</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span>disable 'firstTable'</span><br><span class="line">Took 0.4607 seconds</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;</span>get 'firstTable', 'firstRow'</span><br><span class="line">COLUMN                                  CELL</span><br><span class="line"></span><br><span class="line">ERROR: Table firstTable is disabled!</span><br><span class="line"></span><br><span class="line">For usage try 'help "get"'</span><br><span class="line"></span><br><span class="line">Took 0.3364 seconds</span><br></pre></td></tr></table></figure>
+<p>可以看到，已经无法再对表进行查询操作了</p>
+<p>相应的，要想将表恢复为可用，可以使用 <strong>enable</strong> 命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span>enable 'firstTable'</span><br><span class="line">Took 0.7526 seconds</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;</span> get 'firstTable', 'firstRow'</span><br><span class="line">COLUMN                                  CELL</span><br><span class="line"> columnFamily01:data01                  timestamp=1538273850085, value=value01</span><br><span class="line"> columnFamily01:data03                  timestamp=1538273883122, value=value03</span><br><span class="line">1 row(s)</span><br><span class="line">Took 0.0452 seconds</span><br></pre></td></tr></table></figure>
+<p>下面，尝试一下删除表，将表设置为不可用后，使用 <strong>drop</strong> 命令，即可删除表</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span>drop 'firstTable'</span><br><span class="line">Took 0.2520 seconds</span><br></pre></td></tr></table></figure>
+<p>HBase的基本操作就到此结束了，如需要更进一步的命令用法，可以参见<a href="#http://hbase.apache.org/book.html">官方手册</a> </p>
+<hr>
+<h3 id="关闭HBase"><a href="#关闭HBase" class="headerlink" title="关闭HBase"></a>关闭HBase</h3><p>关闭HBase非常简单，只要使用安装目录下的 <em>bin/stop-hbase.sh</em> 命令即可</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span>./bin/stop-hbase.sh</span><br><span class="line">stopping hbase...........</span><br><span class="line"><span class="meta">&gt;</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h3 id="HBase-数据模型"><a href="#HBase-数据模型" class="headerlink" title="HBase 数据模型"></a>HBase 数据模型</h3><p>​    在 HBase 中，数据模型同样是由表组成的，各个表中又包含数据行和列，在这些表中存储了 HBase 数据。</p>
+<ul>
+<li><p>术语</p>
+<p><strong>表（Table）</strong></p>
+<p>HBase 会将数据组织进一张张的表里面，一个 HBase 表由多行组成。</p>
+<p><strong>行（Row） </strong></p>
+<p>HBase 中的一行包含一个行键和一个或多个与其相关的值的列。在存储行时，行按字母顺序排序。由于这个原因，行键的设计非常重要。目标是以相关行相互靠近的方式存储数据。常用的行键模式是网站域。如果你的行键是域名，则你可能应该将它们存储在相反的位置（org.apache.www，org.apache.mail，org.apache.jira）。这样，表中的所有 Apache 域都彼此靠近，而不是根据子域的第一个字母分布。</p>
+<p><strong>列（Column）</strong></p>
+<p>HBase 中的列由一个列族和一个列限定符组成，它们由<code>:</code>（冒号）字符分隔。</p>
+<p><strong>列族（Column Family）</strong></p>
+<p>出于性能原因，列族在物理上共同存在一组列和它们的值。在 HBase 中每个列族都有一组存储属性，例如其值是否应缓存在内存中，数据如何压缩或其行编码是如何编码的等等。表中的每一行都有相同的列族，但给定的行可能不会在给定的列族中存储任何内容。</p>
+<p>列族一旦确定后，就不能轻易修改，因为它会影响到 HBase 真实的物理存储结构，但是列族中的列标识(Column Qualifier)以及其对应的值可以动态增删。</p>
+<p><strong>列限定符（Column Qualifier）</strong></p>
+<p>列限定符被添加到列族中，以提供给定数据段的索引。鉴于列族的<code>content</code>，列限定符可能是<code>content:html</code>，而另一个可能是<code>content:pdf</code>。虽然列族在创建表时是固定的，但列限定符是可变的，并且在行之间可能差别很大。</p>
+<p><strong>单元格（Cell）</strong></p>
+<p>单元格是行、列族和列限定符的组合，并且包含值和时间戳，它表示值的版本。</p>
+<p><strong>时间戳（Timestamp）</strong></p>
+<p>时间戳与每个值一起编写，并且是给定版本的值的标识符。默认情况下，时间戳表示写入数据时 RegionServer 上的时间，但可以在将数据放入单元格时指定不同的时间戳值。</p>
+</li>
+</ul>
+<hr>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/HBase/" rel="tag"># HBase</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/29/Docker入门/" rel="next" title="Docker入门">
+                <i class="fa fa-chevron-left"></i> Docker入门
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.png"
+                alt="snakeek" />
+            
+              <p class="site-author-name" itemprop="name">snakeek</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#本文目的"><span class="nav-number">1.</span> <span class="nav-text">本文目的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动HBase"><span class="nav-number">2.</span> <span class="nav-text">启动HBase</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用HBase-Shell"><span class="nav-number">3.</span> <span class="nav-text">使用HBase Shell</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关闭HBase"><span class="nav-number">4.</span> <span class="nav-text">关闭HBase</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HBase-数据模型"><span class="nav-number">5.</span> <span class="nav-text">HBase 数据模型</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">snakeek</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
