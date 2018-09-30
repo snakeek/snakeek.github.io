@@ -362,7 +362,7 @@
 <hr>
 <h3 id="启动HBase"><a href="#启动HBase" class="headerlink" title="启动HBase"></a>启动HBase</h3><p>依照以下步骤，可以快速的启动本地HBase服务，方便学习，测试</p>
 <ol>
-<li><p>从官网下载<a href="#https://www.apache.org/dyn/closer.lua/hbase/">HBase安装包</a>并解压，比如我是将安装包放到<strong>~/hbase/</strong>目录下并解压</p>
+<li><p>从官网下载<a href="https://www.apache.org/dyn/closer.lua/hbase/" target="_blank" rel="noopener">HBase安装包</a>并解压，比如我是将安装包放到<strong>~/hbase/</strong>目录下并解压</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mv hbase-2.1.0-bin.tar.gz ~/hbase/</span><br><span class="line">tar -zxvf hbase-2.1.0-bin.tar.gz</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>确认本地环境已经配置好了 <strong>JAVA_HOME</strong> 环境变量，可以使用下述命令进行验证</p>
@@ -405,7 +405,7 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span>enable 'firstTable'</span><br><span class="line">Took 0.7526 seconds</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;</span> get 'firstTable', 'firstRow'</span><br><span class="line">COLUMN                                  CELL</span><br><span class="line"> columnFamily01:data01                  timestamp=1538273850085, value=value01</span><br><span class="line"> columnFamily01:data03                  timestamp=1538273883122, value=value03</span><br><span class="line">1 row(s)</span><br><span class="line">Took 0.0452 seconds</span><br></pre></td></tr></table></figure>
 <p>下面，尝试一下删除表，将表设置为不可用后，使用 <strong>drop</strong> 命令，即可删除表</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span>drop 'firstTable'</span><br><span class="line">Took 0.2520 seconds</span><br></pre></td></tr></table></figure>
-<p>HBase的基本操作就到此结束了，如需要更进一步的命令用法，可以参见<a href="#http://hbase.apache.org/book.html">官方手册</a> </p>
+<p>HBase的基本操作就到此结束了，如需要更进一步的命令用法，可以参见<a href="http://hbase.apache.org/book.html" target="_blank" rel="noopener">官方手册</a> </p>
 <hr>
 <h3 id="关闭HBase"><a href="#关闭HBase" class="headerlink" title="关闭HBase"></a>关闭HBase</h3><p>关闭HBase非常简单，只要使用安装目录下的 <em>bin/stop-hbase.sh</em> 命令即可</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span>./bin/stop-hbase.sh</span><br><span class="line">stopping hbase...........</span><br><span class="line"><span class="meta">&gt;</span></span><br></pre></td></tr></table></figure>
@@ -574,7 +574,7 @@
           
             <p>本文档使用的操作系统为 OSX 10.12，Docker版本为 1.12.3 (13776)</p>
 <hr>
-<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>Docker的安装很容易，只需要从<a href="#https://www.docker.com/">官网</a>下载安装包即可</p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>Docker的安装很容易，只需要从<a href="https://www.docker.com/" target="_blank" rel="noopener">官网</a>下载安装包即可</p>
 <p>安装后，可以通过运行一个hello-world容器来检查是否安装成功:</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">docker run hello-world</span><br><span class="line">Unable to find image 'hello-world:latest' locally</span><br><span class="line">latest: Pulling from library/hello-world</span><br><span class="line">d1725b59e92d: Pull complete</span><br><span class="line">Digest: sha256:0add3ace90ecb4adbf7777e9aacf18357296e799f81cabc9fde470971e499788</span><br><span class="line">Status: Downloaded newer image for hello-world:latest</span><br><span class="line"></span><br><span class="line">Hello from Docker!</span><br><span class="line">This message shows that your installation appears to be working correctly.</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
 <p>如上所示，即为安装成功</p>
